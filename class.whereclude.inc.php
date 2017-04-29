@@ -1,4 +1,7 @@
 <?php
+/**
+ * Keep this loader in least priorities because it accesses remote contents.
+ */
 class whereclude
 {
 	// get class with namespace
@@ -6,9 +9,13 @@ class whereclude
 	// get full path
 	public function github($class_name)
 	{
-		#echo "Nothing found: ", $class_name;
-		$ini = parse_ini_file("paths.ini", true);
-		#print_r($ini["RemoteClasses"]);
+		#echo "Searching: ", $class_name;
+		
+		$ini_file = "paths.ini"; // local file
+		$ini_file = "https://raw.githubusercontent.com/anytizer/whereclude.php/master/paths.ini";
+		
+		$ini = parse_ini_string(file_get_contents($ini_file), true); // remote file
+		print_r($ini["RemoteClasses"]);
 		
 		$remote_url = isset($ini["RemoteClasses"][$class_name])?$ini["RemoteClasses"][$class_name]:"";
 		if($remote_url)
